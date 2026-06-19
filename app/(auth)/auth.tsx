@@ -1,5 +1,6 @@
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   Image,
@@ -12,6 +13,7 @@ import {
 import SegmentedToggle from '../SegmentedToggle';
 
 const Auth = () => {
+  const router=useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 
@@ -80,7 +82,7 @@ const Auth = () => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.loginButton}>
+          <TouchableOpacity style={styles.loginButton} onPress={()=>router.replace("/home")}>
             <Text style={styles.loginButtonText}>Log In</Text>
           </TouchableOpacity>
 

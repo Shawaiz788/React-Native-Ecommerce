@@ -34,7 +34,7 @@ const modal = () => {
           </Text>
           <Text style={styles.txt1}>Everything you need, delivered faster. Shop millions of products with same-day delivery.</Text>
           <TouchableOpacity style={styles.btn}
-                onPress={()=>router.push('/auth')}>
+                onPress={()=>router.replace('/auth')}>
                   <Text style={{ color: 'white', fontSize: 16 }}>Get Started</Text>
           </TouchableOpacity>
       </View>
