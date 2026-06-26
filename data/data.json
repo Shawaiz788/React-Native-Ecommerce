@@ -1,0 +1,135 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "iPhone 16 Pro",
+      "brand": "Apple",
+      "price": 999,
+      "originalPrice": 1099,
+      "discount": 9,
+      "image": "https://placehold.co/300x300/1d1d1f/ffffff/png?text=iPhone+16+Pro",
+      "rating": 4.8,
+      "reviewsCount": 1245,
+      "isFavorite": false
+    },
+    {
+      "id": 2,
+      "title": "Galaxy S25 Ultra",
+      "brand": "Samsung",
+      "price": 1099,
+      "originalPrice": 1199,
+      "discount": 8,
+      "image": "https://placehold.co/300x300/0a0a0a/ffffff/png?text=Galaxy+S25+Ultra",
+      "rating": 4.7,
+      "reviewsCount": 982,
+      "isFavorite": true
+    },
+    {
+      "id": 3,
+      "title": "Pixel 10",
+      "brand": "Google",
+      "price": 799,
+      "originalPrice": 899,
+      "discount": 11,
+      "image": "https://placehold.co/300x300/4285f4/ffffff/png?text=Pixel+10",
+      "rating": 4.6,
+      "reviewsCount": 643,
+      "isFavorite": false
+    },
+    {
+      "id": 4,
+      "title": "OnePlus 13",
+      "brand": "OnePlus",
+      "price": 749,
+      "originalPrice": 849,
+      "discount": 12,
+      "image": "https://placehold.co/300x300/eb0029/ffffff/png?text=OnePlus+13",
+      "rating": 4.5,
+      "reviewsCount": 518,
+      "isFavorite": false
+    },
+    {
+      "id": 5,
+      "title": "Xiaomi 15 Pro",
+      "brand": "Xiaomi",
+      "price": 699,
+      "originalPrice": 799,
+      "discount": 13,
+      "image": "https://placehold.co/300x300/ff6900/ffffff/png?text=Xiaomi+15+Pro",
+      "rating": 4.4,
+      "reviewsCount": 401,
+      "isFavorite": true
+    },
+    {
+      "id": 6,
+      "title": "Sony WH-1000XM6",
+      "brand": "Sony",
+      "price": 399,
+      "originalPrice": 449,
+      "discount": 11,
+      "image": "https://placehold.co/300x300/000000/ffffff/png?text=Sony+WH-1000XM6",
+      "rating": 4.9,
+      "reviewsCount": 2314,
+      "isFavorite": false
+    },
+    {
+      "id": 7,
+      "title": "AirPods Pro (2nd Gen)",
+      "brand": "Apple",
+      "price": 249,
+      "originalPrice": 279,
+      "discount": 10,
+      "image": "https://placehold.co/300x300/f5f5f7/1d1d1f/png?text=AirPods+Pro",
+      "rating": 4.8,
+      "reviewsCount": 3102,
+      "isFavorite": true
+    },
+    {
+      "id": 8,
+      "title": "Apple Watch Series 10",
+      "brand": "Apple",
+      "price": 449,
+      "originalPrice": 499,
+      "discount": 10,
+      "image": "https://placehold.co/300x300/1d1d1f/ffffff/png?text=Apple+Watch+S10",
+      "rating": 4.7,
+      "reviewsCount": 876,
+      "isFavorite": false
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "password123",
+      "avatar": "https://i.pravatar.cc/150?img=1"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "password": "secret123",
+      "avatar": "https://i.pravatar.cc/150?img=2"
+    },
+    {
+      "id": 3,
+      "name": "Alex Johnson",
+      "email": "alex@example.com",
+      "password": "alexpass",
+      "avatar": "https://i.pravatar.cc/150?img=3"
+    }
+  ],
+  "categories": [
+    { "id": 1, "title": "Phones" },
+    { "id": 2, "title": "Laptops" },
+    { "id": 3, "title": "Smart" },
+    { "id": 4, "title": "Headphone" },
+    { "id": 5, "title": "Monitors" },
+    { "id": 6, "title": "Keyboards" },
+    { "id": 7, "title": "Mice" },
+    { "id": 8, "title": "Cameras" },
+    { "id": 9, "title": "Gaming" },
+    { "id": 10, "title": "Speakers" }
+  ]
+}
