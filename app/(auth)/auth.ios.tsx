@@ -125,7 +125,10 @@ const Auth = () => {
               <AntDesign name="google" size={18} color="#EA4335" />
               <Text style={styles.socialText}>Google</Text>
             </TouchableOpacity>
-            
+            <TouchableOpacity style={styles.socialButton}>
+              <Ionicons name="logo-apple" size={20} color="black" />
+              <Text style={styles.socialText}>Apple</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

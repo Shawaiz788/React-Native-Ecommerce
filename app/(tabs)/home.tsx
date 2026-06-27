@@ -114,25 +114,51 @@ const PromotionalBanner = () => {
 
 const Categories = () => {
   const queryClient = useQueryClient();
+  
+  // 1. Add state to track the active category ID (defaulting to 0 for '🌐 All')
+  const [selectedId, setSelectedId] = useState(0);
+
   const { data: CategoryData, isError: status } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
   });
+
   if (status) {
     console.log('Error fetching categories');
   }
+
   return (
     <FlatList
       style={{ marginLeft: 20, marginRight: 20, marginBottom: 10 }}
       data={[{ id: 0, title: '🌐 All' }, ...(CategoryData || [])]}
       horizontal
       showsHorizontalScrollIndicator={false}
-      renderItem={({ item }) => (
-        <View style={styles.categoryItem}>
-          <Text style={{ color: 'grey', fontWeight: 'bold', fontSize: 12 }}>{item.title}</Text>
-        </View>
-      )}
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={(item) => item.id.toString()} // Better to use item.id than index
+      renderItem={({ item }) => {
+        // 2. Check if the current item is the selected one
+        const isSelected = item.id === selectedId;
+
+        return (
+          // 3. Change View to TouchableOpacity to handle press events
+          <TouchableOpacity 
+            onPress={() => setSelectedId(item.id)}
+            style={[
+              styles.categoryItem, 
+              isSelected && styles.selectedCategoryItem // Dynamic styling for container
+            ]}
+          >
+            <Text 
+              style={{ 
+                color: isSelected ? 'black' : 'grey', // Dynamic text color
+                fontWeight: 'bold', 
+                fontSize: 12 
+              }}
+            >
+              {item.title}
+            </Text>
+          </TouchableOpacity>
+        );
+      }}
     />
   );
 };
@@ -556,6 +582,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: -2,
+  },
+  selectedCategoryItem: {
+    backgroundColor: '#2168F2', // Black background for selected
   },
 });
 

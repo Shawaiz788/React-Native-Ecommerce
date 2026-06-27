@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   Image,
@@ -54,7 +55,7 @@ const MenuItem = ({ icon, label, badge, badgeType, isLast }: MenuItemProps) => {
 // --- Main Content Screen ---
 const AccountScreenContent = () => {
   const insets = useSafeAreaInsets();
-
+  const router=useRouter();
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#2D71FA" />
@@ -109,7 +110,7 @@ const AccountScreenContent = () => {
         </View>
 
         {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity style={styles.logoutButton} onPress={()=>{router.replace('/(auth)/auth')}}>
           <Ionicons name="log-out-outline" size={20} color="#FF3B30" style={styles.logoutIcon} />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>

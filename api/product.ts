@@ -12,6 +12,7 @@ export interface Product {
   rating: number;
   reviewsCount: number;
   isFavorite: boolean;
+  category?: string;
 }
 
 export const getProducts = async (): Promise<Product[]> => {

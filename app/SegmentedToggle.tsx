@@ -1,13 +1,13 @@
 import React, { useRef, useState } from 'react';
 import {
-    Animated,
-    LayoutChangeEvent,
-    StyleProp,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  Animated,
+  LayoutChangeEvent,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from 'react-native';
 
 interface SegmentedToggleProps {
