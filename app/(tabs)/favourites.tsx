@@ -1,5 +1,7 @@
+import { getProducts, Product } from '@/api/product';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 import {
   FlatList,
   Image,
@@ -11,35 +13,9 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// --- Interface ---
-export interface Product {
-  id: number;          
-  title: string;
-  brand: string;
-  price: number;
-  originalPrice?: number;
-  discount: number;
-  image: string;
-  rating: number;
-  reviewsCount: number;
-  isFavorite: boolean;
-}
 
-// --- Mock Data ---
-const INITIAL_FAVORITES: Product[] = [
-  {
-    id: 1,
-    brand: 'RØDE',
-    title: 'RØDE PodMic Broadcast Microphone',
-    price: 199,
-    originalPrice: 249,
-    discount: 20,
-    image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=300&auto=format&fit=crop',
-    rating: 4.8,
-    reviewsCount: 1284,
-    isFavorite: true,
-  },
-];
+
+
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
@@ -95,14 +71,23 @@ const ProductCard = ({ product }: { product: Product }) => {
 // --- Main Screen Content ---
 const FavoritesScreenContent = () => {
   const insets = useSafeAreaInsets();
-  const [favorites, setFavorites] = useState<Product[]>(INITIAL_FAVORITES);
 
+const queryClient = useQueryClient();
+
+  const { data: ProductsData, isError: status } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+  });
+
+  if (status) {
+    console.log('Error fetching products');
+  }
   return (
     <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       <FlatList
-        data={favorites}
+        data={ProductsData?.filter((p): p is Product => !!p.isFavorite)}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         columnWrapperStyle={styles.gridRow}
@@ -111,7 +96,7 @@ const FavoritesScreenContent = () => {
         ListHeaderComponent={
           <View style={styles.headerBlock}>
             <Text style={styles.headerTitle}>Favorites</Text>
-            <Text style={styles.headerSubtitle}>{favorites.length} saved items</Text>
+            <Text style={styles.headerSubtitle}>{ProductsData?.filter((p): p is Product => !!p.isFavorite).length} saved items</Text>
           </View>
         }
         renderItem={({ item }) => <ProductCard product={item} />}
