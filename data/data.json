@@ -1,7 +1,7 @@
 {
   "products": [
     {
-      "id": 1,
+      "id": "1",
       "title": "iPhone 16 Pro",
       "brand": "Apple",
       "price": 999,
@@ -10,10 +10,10 @@
       "image": "https://placehold.co/300x300/1d1d1f/ffffff/png?text=iPhone+16+Pro",
       "rating": 4.8,
       "reviewsCount": 1245,
-      "isFavorite": false
+      "isFavorite": true
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Galaxy S25 Ultra",
       "brand": "Samsung",
       "price": 1099,
@@ -25,7 +25,7 @@
       "isFavorite": true
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Pixel 10",
       "brand": "Google",
       "price": 799,
@@ -37,7 +37,7 @@
       "isFavorite": false
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "OnePlus 13",
       "brand": "OnePlus",
       "price": 749,
@@ -49,7 +49,7 @@
       "isFavorite": false
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Xiaomi 15 Pro",
       "brand": "Xiaomi",
       "price": 699,
@@ -61,7 +61,7 @@
       "isFavorite": true
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Sony WH-1000XM6",
       "brand": "Sony",
       "price": 399,
@@ -73,7 +73,7 @@
       "isFavorite": false
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "AirPods Pro (2nd Gen)",
       "brand": "Apple",
       "price": 249,
@@ -85,7 +85,7 @@
       "isFavorite": true
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Apple Watch Series 10",
       "brand": "Apple",
       "price": 449,
@@ -99,21 +99,21 @@
   ],
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "name": "John Doe",
       "email": "john@example.com",
       "password": "password123",
       "avatar": "https://i.pravatar.cc/150?img=1"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Jane Smith",
       "email": "jane@example.com",
       "password": "secret123",
       "avatar": "https://i.pravatar.cc/150?img=2"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Alex Johnson",
       "email": "alex@example.com",
       "password": "alexpass",
@@ -121,15 +121,46 @@
     }
   ],
   "categories": [
-    { "id": 1, "title": "Phones" },
-    { "id": 2, "title": "Laptops" },
-    { "id": 3, "title": "Smart" },
-    { "id": 4, "title": "Headphone" },
-    { "id": 5, "title": "Monitors" },
-    { "id": 6, "title": "Keyboards" },
-    { "id": 7, "title": "Mice" },
-    { "id": 8, "title": "Cameras" },
-    { "id": 9, "title": "Gaming" },
-    { "id": 10, "title": "Speakers" }
-  ]
+    {
+      "id": "1",
+      "title": "Phones"
+    },
+    {
+      "id": "2",
+      "title": "Laptops"
+    },
+    {
+      "id": "3",
+      "title": "Smart"
+    },
+    {
+      "id": "4",
+      "title": "Headphone"
+    },
+    {
+      "id": "5",
+      "title": "Monitors"
+    },
+    {
+      "id": "6",
+      "title": "Keyboards"
+    },
+    {
+      "id": "7",
+      "title": "Mice"
+    },
+    {
+      "id": "8",
+      "title": "Cameras"
+    },
+    {
+      "id": "9",
+      "title": "Gaming"
+    },
+    {
+      "id": "10",
+      "title": "Speakers"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

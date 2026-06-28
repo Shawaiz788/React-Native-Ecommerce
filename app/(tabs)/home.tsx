@@ -1,11 +1,20 @@
-
 import { getCategories } from '@/api/category';
-import { getProducts, Product } from '@/api/product';
+import { getProducts, Product, updateProduct } from '@/api/product';
 import useCartStore from '@/store/cartStore';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -45,11 +54,8 @@ const DEALS_OF_THE_DAY: Product[] = [
     rating: 4.7,
     reviewsCount: 89,
     isFavorite: false,
-  }
+  },
 ];
-
-
-
 
 const TopContainer = () => {
   return (
@@ -91,8 +97,13 @@ const SearchBar = () => {
 
 const PromotionalBanner = () => {
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.bannerScroll} contentContainerStyle={styles.bannerContainer}>
-      <View style={[styles.banner, { backgroundColor: '#2D71FA' }]}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.bannerScroll}
+      contentContainerStyle={styles.bannerContainer}
+    >
+      <View style={[styles.banner, { backgroundColor: '#2D71FA' }]}> 
         <Text style={styles.bannerTag}>TODAY ONLY</Text>
         <Text style={styles.bannerTitle}>Mega Tech Sale</Text>
         <Text style={styles.bannerSubtitle}>Up to 40% off premium audio</Text>
@@ -100,7 +111,7 @@ const PromotionalBanner = () => {
           <Text style={styles.shopNowText}>Shop now</Text>
         </TouchableOpacity>
       </View>
-      <View style={[styles.banner, { backgroundColor: '#00C853' }]}>
+      <View style={[styles.banner, { backgroundColor: '#00C853' }]}> 
         <Text style={styles.bannerTag}>TODAY ONLY</Text>
         <Text style={styles.bannerTitle}>Free Delivery</Text>
         <Text style={styles.bannerSubtitle}>On everything</Text>
@@ -113,9 +124,6 @@ const PromotionalBanner = () => {
 };
 
 const Categories = () => {
-  const queryClient = useQueryClient();
-  
-  // 1. Add state to track the active category ID (defaulting to 0 for '🌐 All')
   const [selectedId, setSelectedId] = useState(0);
 
   const { data: CategoryData, isError: status } = useQuery({
@@ -133,25 +141,20 @@ const Categories = () => {
       data={[{ id: 0, title: '🌐 All' }, ...(CategoryData || [])]}
       horizontal
       showsHorizontalScrollIndicator={false}
-      keyExtractor={(item) => item.id.toString()} // Better to use item.id than index
+      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => {
-        // 2. Check if the current item is the selected one
         const isSelected = item.id === selectedId;
 
         return (
-          // 3. Change View to TouchableOpacity to handle press events
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setSelectedId(item.id)}
-            style={[
-              styles.categoryItem, 
-              isSelected && styles.selectedCategoryItem // Dynamic styling for container
-            ]}
+            style={[styles.categoryItem, isSelected && styles.selectedCategoryItem]}
           >
-            <Text 
-              style={{ 
-                color: isSelected ? 'black' : 'grey', // Dynamic text color
-                fontWeight: 'bold', 
-                fontSize: 12 
+            <Text
+              style={{
+                color: isSelected ? 'white' : 'grey',
+                fontWeight: 'bold',
+                fontSize: 12,
               }}
             >
               {item.title}
@@ -199,31 +202,45 @@ const DealsOfTheDayHeader = () => {
     </View>
   );
 };
-const ProductCard = ({ product }: { product: Product }) => {
-  const{addProduct} = useCartStore();
+
+const ProductCard = ({
+  product,
+  onToggleFavourite,
+}: {
+  product: Product;
+  onToggleFavourite: (p: Product) => void;
+}) => {
+  const { addProduct } = useCartStore();
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
         <Image source={{ uri: product.image }} style={styles.productImage} />
-        
-        {product.originalPrice!=product.price && (
+
+        {product.originalPrice != product.price && (
           <View style={styles.discountBadge}>
-            <Text style={styles.discountText}>-{Math.round((1 - product.price / product.originalPrice) * 100)}%</Text>
+            <Text style={styles.discountText}>
+              -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+            </Text>
           </View>
         )}
 
-        <TouchableOpacity style={styles.favoriteBadge}>
-          <Ionicons 
-            name={product.isFavorite ? "heart" : "heart-outline"} 
-            size={16} 
-            color={product.isFavorite ? '#FF3B30' : '#8E8E93'} 
+        <TouchableOpacity
+          style={styles.favoriteBadge}
+          onPress={() => onToggleFavourite(product)}
+          activeOpacity={0.8}
+        >
+          <Ionicons
+            name={product.isFavorite ? 'heart' : 'heart-outline'}
+            size={16}
+            color={product.isFavorite ? '#FF3B30' : '#8E8E93'}
           />
         </TouchableOpacity>
       </View>
 
       <View style={styles.detailsContainer}>
         <Text style={styles.brandText}>{product.brand?.toUpperCase()}</Text>
-        
+
         <Text style={styles.titleText} numberOfLines={2}>
           {product.title}
         </Text>
@@ -231,7 +248,9 @@ const ProductCard = ({ product }: { product: Product }) => {
         <View style={styles.ratingRow}>
           <Ionicons name="star" size={12} color="#FFCC00" style={styles.starIcon} />
           <Text style={styles.ratingText}>{product.rating || 0} </Text>
-          <Text style={styles.reviewsText}>({(product.reviewsCount || 0).toLocaleString()})</Text>
+          <Text style={styles.reviewsText}>
+            ({(product.reviewsCount || 0).toLocaleString()})
+          </Text>
         </View>
 
         <View style={styles.priceRow}>
@@ -251,21 +270,53 @@ const ProductCard = ({ product }: { product: Product }) => {
   );
 };
 
-
 const home = () => {
+  const queryClient = useQueryClient();
 
-   const queryClient = useQueryClient();
   const { data: ProductsData, isError: status } = useQuery({
     queryKey: ['products'],
     queryFn: getProducts,
   });
+
   if (status) {
     console.log('Error fetching products');
   }
 
+  const toggleFavouriteMutation = useMutation({
+    mutationFn: async (product: Product) => {
+      return updateProduct({
+        ...product,
+        isFavorite: !product.isFavorite,
+      });
+    },
+    onMutate: async (product: Product) => {
+      await queryClient.cancelQueries({ queryKey: ['products'] });
+      const prev = queryClient.getQueryData<Product[]>(['products']);
+
+      queryClient.setQueryData<Product[]>(['products'], (old) => {
+        if (!old) return old;
+        return old.map((p) => (p.id === product.id ? { ...p, isFavorite: !p.isFavorite } : p));
+      });
+
+      return { prev };
+    },
+    onError: (_err, _product, context) => {
+      if (context?.prev) {
+        queryClient.setQueryData(['products'], context.prev);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+
+  const toggleFavourite = (product: Product) => {
+    toggleFavouriteMutation.mutate(product);
+  };
+
   return (
     <FlatList
-      data={[]} 
+      data={[]}
       renderItem={null}
       style={styles.container}
       showsVerticalScrollIndicator={false}
@@ -275,18 +326,18 @@ const home = () => {
           <SearchBar />
           <PromotionalBanner />
           <Categories />
-          
+
           <DealsOfTheDayHeader />
           <FlatList
             data={DEALS_OF_THE_DAY}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 10 ,gap: 10}}
-            renderItem={({ item }) => <ProductCard product={item} />}
+            contentContainerStyle={{ paddingHorizontal: 14, paddingBottom: 10, gap: 10 }}
+            renderItem={({ item }) => <ProductCard product={item} onToggleFavourite={toggleFavourite} />}
             keyExtractor={(item) => item.id.toString()}
           />
 
-         <View style={[styles.sectionHeaderContainer, { marginTop: 10 }]}>
+          <View style={[styles.sectionHeaderContainer, { marginTop: 10 }]}>
             <View>
               <Text style={styles.title}>Recommended for You</Text>
               <Text style={styles.subtitle}>Based on your recent activity</Text>
@@ -297,14 +348,13 @@ const home = () => {
       ListFooterComponent={
         <View style={styles.productsGridContainer}>
           {ProductsData?.map((item) => (
-            <ProductCard key={item.id} product={item} />
+            <ProductCard key={item.id} product={item} onToggleFavourite={toggleFavourite} />
           ))}
         </View>
       }
     />
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -384,7 +434,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   banner: {
-    width: windowWidth * 0.70,
+    width: windowWidth * 0.7,
     height: 135,
     borderRadius: 16,
     padding: 16,
@@ -433,6 +483,9 @@ const styles = StyleSheet.create({
     borderColor: '#E5E5EA',
     marginRight: 8,
   },
+  selectedCategoryItem: {
+    backgroundColor: '#2168F2',
+  },
   sectionHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -467,7 +520,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: '#ffffff',
     borderRadius: 16,
-    width: (windowWidth - 40) / 2, 
+    width: (windowWidth - 40) / 2,
     marginVertical: 6,
     borderWidth: 1,
     borderColor: '#f0f0f0',
@@ -582,9 +635,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: -2,
-  },
-  selectedCategoryItem: {
-    backgroundColor: '#2168F2', // Black background for selected
   },
 });
 

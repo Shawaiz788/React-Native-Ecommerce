@@ -21,3 +21,15 @@ export const getProducts = async (): Promise<Product[]> => {
   const result = await response.json();
   return result;
 };
+
+
+export const updateProduct=async (product:Product):Promise<Product>=>{
+  const result=await fetch(`${API_URL}/products/${product.id}`,{
+    method:'PUT',
+    headers:{
+      'Content-Type':'application/json',
+    },
+    body:JSON.stringify(product),
+  });
+  return result.json();
+};
