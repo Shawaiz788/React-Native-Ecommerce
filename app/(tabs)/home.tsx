@@ -1,6 +1,7 @@
 import { getCategories } from '@/api/category';
 import { getProducts, Product, updateProduct } from '@/api/product';
 import useCartStore from '@/store/cartStore';
+import useFavouriteStore from '@/store/favouriteStore';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
@@ -272,6 +273,7 @@ const ProductCard = ({
 
 const home = () => {
   const queryClient = useQueryClient();
+  const { toggleFavorite } = useFavouriteStore(); // ✅ added
 
   const { data: ProductsData, isError: status } = useQuery({
     queryKey: ['products'],
@@ -298,12 +300,15 @@ const home = () => {
         return old.map((p) => (p.id === product.id ? { ...p, isFavorite: !p.isFavorite } : p));
       });
 
+      toggleFavorite(product.id); // ✅ keep Zustand store in sync with the cache
+
       return { prev };
     },
-    onError: (_err, _product, context) => {
+    onError: (_err, product, context) => {
       if (context?.prev) {
         queryClient.setQueryData(['products'], context.prev);
       }
+      toggleFavorite(product.id); // ✅ roll back Zustand store on error too
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });

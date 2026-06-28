@@ -1,7 +1,8 @@
-import { getProducts, Product } from '@/api/product';
+import { getProducts, Product, updateProduct } from '@/api/product';
+import useFavouriteStore from '@/store/favouriteStore';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useEffect, useMemo } from 'react';
 import {
   FlatList,
   Image,
@@ -17,7 +18,8 @@ import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-cont
 
 
 
-const ProductCard = ({ product }: { product: Product }) => {
+
+const ProductCard = ({ product, onToggleFavourite }: { product: Product; onToggleFavourite: (p: Product) => void }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.imageContainer}>
@@ -29,7 +31,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </View>
         )}
 
-        <TouchableOpacity style={styles.favoriteBadge}>
+        <TouchableOpacity style={styles.favoriteBadge} onPress={() => onToggleFavourite(product)}>
           <Ionicons 
             name={product.isFavorite ? "heart" : "heart-outline"} 
             size={16} 
@@ -71,23 +73,92 @@ const ProductCard = ({ product }: { product: Product }) => {
 // --- Main Screen Content ---
 const FavoritesScreenContent = () => {
   const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
 
-const queryClient = useQueryClient();
+  const { favoriteIds, toggleFavorite, setFavorites } = useFavouriteStore();
+
+  // If user favorites came from home just now, keep `isFavorite` in sync in the
+  // local query cache so this screen re-renders immediately.
+  React.useEffect(() => {
+    if (!ProductsData?.length) return;
+    if (!favoriteIds.length) return;
+
+    queryClient.setQueryData<Product[]>(['products'], (old) => {
+      if (!old) return old;
+      return old.map((p) => ({ ...p, isFavorite: favoriteIds.includes(p.id) }));
+    });
+  }, [favoriteIds, ProductsData?.length, queryClient]);
 
   const { data: ProductsData, isError: status } = useQuery({
     queryKey: ['products'],
     queryFn: getProducts,
   });
 
+  // First sync: if we fetched products that already have isFavorite set,
+  // initialize Zustand from server (only once / when store is empty).
+  useEffect(() => {
+    if (!ProductsData?.length) return;
+    if (favoriteIds.length) return;
+
+    const serverFavoriteIds = ProductsData.filter((p) => p.isFavorite).map((p) => p.id);
+    setFavorites(serverFavoriteIds);
+  }, [ProductsData, favoriteIds.length, setFavorites]);
+
+  const filteredFavorites = useMemo(() => {
+    if (!ProductsData?.length) return [] as Product[];
+    if (!favoriteIds.length) return [] as Product[];
+    return ProductsData.filter((p) => favoriteIds.includes(p.id));
+  }, [ProductsData, favoriteIds]);
+
+  const toggleFavouriteMutation = useMutation({
+    mutationFn: async (product: Product) => {
+      return updateProduct({
+        ...product,
+        isFavorite: !product.isFavorite,
+      });
+    },
+    onMutate: async (product: Product) => {
+      await queryClient.cancelQueries({ queryKey: ['products'] });
+      const prev = queryClient.getQueryData<Product[]>(['products']);
+
+      // Optimistic UI: update server cache immediately.
+      queryClient.setQueryData<Product[]>(['products'], (old) => {
+        if (!old) return old;
+        return old.map((p) => (p.id === product.id ? { ...p, isFavorite: !p.isFavorite } : p));
+      });
+
+      // Optimistic local store: keep Zustand in sync.
+      toggleFavorite(product.id);
+
+      return { prev };
+    },
+    onError: (_err: unknown, _product: Product, context: { prev?: Product[] }) => {
+      // Rollback server cache.
+      if (context?.prev) {
+        queryClient.setQueryData(['products'], context.prev);
+      }
+      // Rollback local store by toggling again (since we toggled optimistically).
+      toggleFavorite(_product.id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+
+  const toggleFavourite = (product: Product) => {
+    toggleFavouriteMutation.mutate(product);
+  };
+
   if (status) {
     console.log('Error fetching products');
   }
+
   return (
     <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       <FlatList
-        data={ProductsData?.filter((p): p is Product => !!p.isFavorite)}
+        data={filteredFavorites}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         columnWrapperStyle={styles.gridRow}
@@ -96,10 +167,10 @@ const queryClient = useQueryClient();
         ListHeaderComponent={
           <View style={styles.headerBlock}>
             <Text style={styles.headerTitle}>Favorites</Text>
-            <Text style={styles.headerSubtitle}>{ProductsData?.filter((p): p is Product => !!p.isFavorite).length} saved items</Text>
+            <Text style={styles.headerSubtitle}>{filteredFavorites.length} saved items</Text>
           </View>
         }
-        renderItem={({ item }) => <ProductCard product={item} />}
+        renderItem={({ item }) => <ProductCard product={item} onToggleFavourite={toggleFavourite} />}
       />
     </View>
   );

@@ -22,7 +22,7 @@
       "image": "https://placehold.co/300x300/0a0a0a/ffffff/png?text=Galaxy+S25+Ultra",
       "rating": 4.7,
       "reviewsCount": 982,
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "id": "3",
@@ -34,7 +34,7 @@
       "image": "https://placehold.co/300x300/4285f4/ffffff/png?text=Pixel+10",
       "rating": 4.6,
       "reviewsCount": 643,
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "id": "4",
@@ -46,7 +46,7 @@
       "image": "https://placehold.co/300x300/eb0029/ffffff/png?text=OnePlus+13",
       "rating": 4.5,
       "reviewsCount": 518,
-      "isFavorite": false
+      "isFavorite": true
     },
     {
       "id": "5",
@@ -58,7 +58,7 @@
       "image": "https://placehold.co/300x300/ff6900/ffffff/png?text=Xiaomi+15+Pro",
       "rating": 4.4,
       "reviewsCount": 401,
-      "isFavorite": true
+      "isFavorite": false
     },
     {
       "id": "6",
@@ -82,7 +82,7 @@
       "image": "https://placehold.co/300x300/f5f5f7/1d1d1f/png?text=AirPods+Pro",
       "rating": 4.8,
       "reviewsCount": 3102,
-      "isFavorite": true
+      "isFavorite": false
     },
     {
       "id": "8",
